@@ -69,18 +69,21 @@ for _ in range(epoch):
 def check_aacuracy(loader, model):
     num_correct = 0
     num_samples = 0
-    for idx, (data, target) in enumerate(loader):
-        
-        # data = data.reshape(data.shape[0], -1)
-        
-        scores = model(data)
-        
-        _, pred = scores.max(1)
-        
-        num_correct += (pred==target).sum()
-        num_samples += pred.size()[0]
+    model.eval()
     
-    print(f'Got {num_correct} / {num_samples} with accuracy {float(num_correct)/float(num_samples) *100:.2f}')
+    with torch.no_grad():
+        for idx, (data, target) in enumerate(loader):
+            
+            # data = data.reshape(data.shape[0], -1)
+            
+            scores = model(data)
+            
+            _, pred = scores.max(1)
+            
+            num_correct += (pred==target).sum()
+            num_samples += pred.size()[0]
+    
+        print(f'Got {num_correct} / {num_samples} with accuracy {float(num_correct)/float(num_samples) *100:.2f}')
     
 
 check_aacuracy(train_loader, model)
